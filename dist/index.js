@@ -2,6 +2,6 @@
 
 Object.defineProperty(exports, '__esModule', { value: true });
 
-const gobrrr = 'go brrrrrr';
+const gobrr = 'go brr';
 
-exports.gobrrr = gobrrr;
+exports.gobrr = gobrr;

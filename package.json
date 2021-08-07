@@ -1,72 +1,30 @@
 {
-	"name": "@leonardssh/atlas-plugin-rpc",
+	"name": "@leonardssh/atlas-plugin-rpc-client",
 	"version": "1.0.0",
+	"description": "> TODO: description",
+	"license": "MIT",
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/leonardssh/atlas-plugin-rpc.git"
 	},
 	"author": "LeonardSSH <leonardssh22@gmail.com>",
-	"license": "MIT",
-	"private": true,
-	"main": "dist/index.js",
-	"module": "dist/index.esm.js",
-	"types": "dist/index.d.ts",
 	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist/*"
+	],
+	"exports": {
+		"require": "./dist/index.js",
+		"import": "./dist/index.esm.js"
+	},
 	"scripts": {
 		"clean": "node scripts/clean-dist.mjs && rimraf ./{client.js,client.esm.js,client.d.ts}",
 		"prebuild": "pnpm clean && pnpm types",
-		"build": "pnpm prebuild && rollup -c",
-		"watch": "rollup -cw",
-		"prepublishOnly": "pnpm pack",
+		"build": "rollup -c",
 		"prewatch": "pnpm clean",
-		"types": "dts-bundle-generator --config dts-bundle.json",
-		"lint": "eslint src --ext js,ts --fix",
-		"format": "prettier --write src/**/*.ts",
-		"prepare": "husky install .github/husky",
-		"cz": "git-cz",
-		"commit": "git-cz"
-	},
-	"devDependencies": {
-		"@commitlint/cli": "^13.1.0",
-		"@commitlint/config-conventional": "^13.1.0",
-		"@rollup/plugin-typescript": "^8.2.5",
-		"@types/node": "^16.4.13",
-		"@typescript-eslint/eslint-plugin": "^4.29.0",
-		"@typescript-eslint/parser": "^4.29.0",
-		"builtin-modules": "^3.2.0",
-		"cz-conventional-changelog": "^3.3.0",
-		"dts-bundle-generator": "^5.9.0",
-		"eslint": "^7.32.0",
-		"eslint-config-prettier": "^8.3.0",
-		"eslint-plugin-prettier": "^3.4.0",
-		"husky": "^7.0.1",
-		"lint-staged": "^11.1.2",
-		"prettier": "^2.3.2",
-		"pretty-quick": "^3.1.1",
-		"rimraf": "^3.0.2",
-		"rollup": "^2.56.0",
-		"typescript": "^4.3.5"
-	},
-	"files": [
-		"dist",
-		"!dist/*.tsbuildinfo",
-		"client.js",
-		"client.esm.js",
-		"client.d.ts"
-	],
-	"exports": {
-		".": {
-			"require": "./dist/index.js",
-			"import": "./dist/index.esm.js"
-		},
-		"./client": {
-			"require": "./client.js",
-			"import": "./client.esm.js"
-		}
-	},
-	"engines": {
-		"node": ">=12",
-		"npm": ">=6"
+		"watch": "rollup -cw",
+		"types": "dts-bundle-generator --config dts-bundle.json"
 	},
 	"keywords": [
 		"altv",
@@ -76,42 +34,5 @@
 		"atlas-rpc",
 		"atlas-plugin",
 		"atlas-plugin-rpc"
-	],
-	"commitlint": {
-		"extends": [
-			"@commitlint/config-conventional"
-		]
-	},
-	"lint-staged": {
-		"*.{mjs,js,ts}": "eslint --fix --ext mjs,js,ts"
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
-		}
-	},
-	"prettier": {
-		"$schema": "http://json.schemastore.org/prettierrc",
-		"endOfLine": "lf",
-		"quoteProps": "as-needed",
-		"semi": true,
-		"singleQuote": true,
-		"tabWidth": 4,
-		"trailingComma": "none",
-		"useTabs": true,
-		"arrowParens": "always",
-		"bracketSpacing": true,
-		"printWidth": 120,
-		"overrides": [
-			{
-				"files": [
-					"*.yml"
-				],
-				"options": {
-					"tabWidth": 2,
-					"useTabs": false
-				}
-			}
-		]
-	}
+	]
 }
