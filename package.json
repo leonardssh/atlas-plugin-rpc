@@ -15,9 +15,9 @@
 	"scripts": {
 		"clean": "node scripts/clean-dist.mjs && rimraf ./{client.js,client.esm.js,client.d.ts}",
 		"prebuild": "pnpm clean && pnpm types",
-		"build": "rollup -c",
+		"build": "pnpm prebuild && rollup -c",
 		"watch": "rollup -cw",
-		"postbuild": "pnpm pack",
+		"prepublishOnly": "pnpm pack",
 		"prewatch": "pnpm clean",
 		"types": "dts-bundle-generator --config dts-bundle.json",
 		"lint": "eslint src --ext js,ts --fix",
