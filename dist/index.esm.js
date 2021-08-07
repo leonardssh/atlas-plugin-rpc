@@ -1,3 +1,3 @@
-const gobrrr = 'go brrrrrr';
+const gobrr = 'go brr';
 
-export { gobrrr };
+export { gobrr };
