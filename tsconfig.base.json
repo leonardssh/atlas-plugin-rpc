@@ -36,5 +36,5 @@
 		"useDefineForClassFields": true,
 		"baseUrl": "./"
 	},
-	"include": ["src"]
+	"include": ["packages"]
 }

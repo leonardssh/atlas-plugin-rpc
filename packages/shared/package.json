@@ -1,0 +1,38 @@
+{
+	"name": "@leonardssh/atlas-plugin-rpc-shared",
+	"version": "1.0.0",
+	"description": "> TODO: description",
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/leonardssh/atlas-plugin-rpc.git"
+	},
+	"author": "LeonardSSH <leonardssh22@gmail.com>",
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"files": [
+		"dist/*"
+	],
+	"exports": {
+		"require": "./dist/index.js",
+		"import": "./dist/index.esm.js"
+	},
+	"scripts": {
+		"clean": "node scripts/clean-dist.mjs && rimraf ./{client.js,client.esm.js,client.d.ts}",
+		"prebuild": "pnpm clean && pnpm types",
+		"build": "rollup -c",
+		"prewatch": "pnpm clean",
+		"watch": "rollup -cw",
+		"types": "dts-bundle-generator --config dts-bundle.json"
+	},
+	"keywords": [
+		"altv",
+		"altv-rpc",
+		"atlas",
+		"framework",
+		"atlas-rpc",
+		"atlas-plugin",
+		"atlas-plugin-rpc"
+	]
+}

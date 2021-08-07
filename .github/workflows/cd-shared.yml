@@ -1,9 +1,13 @@
-name: Continuous Delivery - Plugin
+name: Continuous Delivery - Shared
 
 on:
   push:
     branches:
       - main
+    paths:
+      - packages/shared/**
+      - package.json
+      - .github/workflows/cd-shared.yml
 
 jobs:
   pre_ci:
@@ -15,25 +19,21 @@ jobs:
         with:
           fetch-depth: 2
 
-      - name: "[Push] Get commit message"
+      - name: '[Push] Get commit message'
         if: github.event_name == 'push'
         id: push_get_commit_message
         run: echo ::set-output name=push_commit_message::$(git log --format=%B -n 1 HEAD)
 
-      - name: "[Pull Request] Get commit message"
+      - name: '[Pull Request] Get commit message'
         if: github.event_name == 'pull_request'
         id: pr_get_commit_message
         run: echo ::set-output name=pr_commit_message::$(git log --format=%B -n 1 HEAD^2)
 
-      - name: Add problem matchers
-        run: |
-          echo "::add-matcher::.github/problemMatchers/tsc.json"
-          echo "::add-matcher::.github/problemMatchers/eslint.json"
     outputs:
       commit_message: $( [ -z "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" ] && echo "${{ steps.push_get_commit_message.outputs.push_commit_message }}" || echo "${{ steps.pr_get_commit_message.outputs.pr_commit_message }}" )
 
-  BuildPlugin:
-    name: Publish Plugin
+  BuildShared:
+    name: Publish Shared
     runs-on: ubuntu-latest
     if: "!contains(needs.pre_ci.outputs.commit_message, '[skip ci]')"
     needs: pre_ci
@@ -43,9 +43,6 @@ jobs:
         with:
           fetch-depth: 0
           persist-credentials: false
-
-      - name: Add TypeScript problem matcher
-        run: echo "::add-matcher::.github/problemMatchers/tsc.json"
 
       - name: Use Node.js v16 with NPM Registry
         uses: actions/setup-node@v2
@@ -68,15 +65,18 @@ jobs:
         run: pnpm i --frozen-lockfile
 
       - name: Build Code
-        run: pnpm build
+        run: pnpm build --filter @leonardssh/atlas-plugin-rpc-shared
 
       - name: Push new code
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
           REPO="https://${GITHUB_ACTOR}:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
+          echo -e "\n# Move to the shared directory"
+          cd packages/shared
+
           echo -e "\n# Checkout the repo in the target branch"
-          TARGET_BRANCH="build"
+          TARGET_BRANCH="build-shared"
           git clone $REPO out -b $TARGET_BRANCH
 
           echo -e "\n# Remove any old files in the dist folder"
@@ -87,16 +87,13 @@ jobs:
           rsync -vaI README.md out/
           rsync -vaI LICENSE.md out/
           rsync -vaI dist/ out/dist
-          rsync -vaI client.d.ts out/
-          rsync -vaI client.js out/
-          rsync -vaI client.esm.js out/
 
           echo -e "\n# Commit and push"
           cd out
           git add --all .
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
-          git commit -m "build: rollup build for ${GITHUB_SHA}" || true
+          git commit -m "build: shared build for ${GITHUB_SHA}" || true
           git push origin $TARGET_BRANCH
         env:
           GITHUB_TOKEN: ${{ secrets.COMMIT_TOKEN }}
